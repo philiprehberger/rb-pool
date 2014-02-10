@@ -1,0 +1,26 @@
+AllCops:
+  TargetRubyVersion: 3.1
+  NewCops: enable
+  SuggestExtensions: false
+Style:
+  Enabled: false
+Metrics:
+  Enabled: false
+Naming:
+  Enabled: false
+Lint/DuplicateBranch:
+  Enabled: false
+Lint/HashCompareByIdentity:
+  Enabled: false
+Layout/LineLength:
+  Max: 120
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/LineEndStringConcatenationIndentation:
+  Enabled: false
+Layout/EndOfLine:
+  Enabled: false
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+Bundler/OrderedGems:
+  Enabled: false
