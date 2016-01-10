@@ -3,20 +3,67 @@ AllCops:
   NewCops: enable
   SuggestExtensions: false
 
-Style:
+Style/Documentation:
   Enabled: false
 
-Metrics:
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+Style/FormatStringToken:
   Enabled: false
 
-Naming:
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
+
+Metrics/MethodLength:
+  Max: 80
+
+Metrics/AbcSize:
+  Max: 90
+
+Metrics/CyclomaticComplexity:
+  Max: 25
+
+Metrics/PerceivedComplexity:
+  Max: 25
+
+Metrics/ClassLength:
+  Max: 300
+
+Metrics/ModuleLength:
+  Max: 300
+
+Metrics/ParameterLists:
+  Max: 8
+
+Metrics/CollectionLiteralLength:
   Enabled: false
 
-Lint:
+Layout/LineLength:
+  Max: 120
+
+Layout/EndOfLine:
   Enabled: false
 
-Layout:
+Lint/HashCompareByIdentity:
   Enabled: false
 
-Bundler/OrderedGems:
+Lint/DuplicateBranch:
+  Enabled: false
+
+Lint/EmptyWhen:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Naming/PredicatePrefix:
+  Enabled: false
+
+Naming/PredicateMethod:
+  Enabled: false
+
+Naming/MethodParameterName:
   Enabled: false
