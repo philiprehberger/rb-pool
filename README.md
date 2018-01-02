@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-pool.svg)](https://rubygems.org/gems/philiprehberger-pool)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-pool)](LICENSE)
 
-Generic thread-safe object pool with idle timeout and health checks.
+Generic thread-safe object pool with idle timeout and health checks
 
 ## Requirements
 
@@ -20,7 +20,7 @@ gem 'philiprehberger-pool'
 
 Or install directly:
 
-```sh
+```bash
 gem install philiprehberger-pool
 ```
 
@@ -115,7 +115,7 @@ Creates a new resource pool.
 
 ## Development
 
-```sh
+```bash
 bundle install
 bundle exec rspec
 bundle exec rubocop
@@ -123,4 +123,4 @@ bundle exec rubocop
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT
