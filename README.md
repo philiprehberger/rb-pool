@@ -15,7 +15,7 @@ Generic thread-safe object pool with idle timeout and health checks
 Add to your Gemfile:
 
 ```ruby
-gem 'philiprehberger-pool'
+gem "philiprehberger-pool"
 ```
 
 Or install directly:
