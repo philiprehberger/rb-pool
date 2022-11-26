@@ -7,6 +7,11 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.10] - 2026-03-31
+
+### Added
+- Add GitHub issue templates, dependabot config, and PR template
+
 ## [0.1.9] - 2026-03-31
 
 ### Changed
