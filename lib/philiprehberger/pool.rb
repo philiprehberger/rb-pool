@@ -119,6 +119,20 @@ module Philiprehberger
         end
       end
 
+      def drain
+        @mutex.synchronize do
+          raise ShutdownError, 'pool is shut down' if @shutdown
+
+          drained = @available.dup
+          @available.clear
+          @size -= drained.size
+          drained.each do |entry|
+            entry.resource.close if entry.resource.respond_to?(:close)
+          end
+          drained.size
+        end
+      end
+
       def shutdown?
         @shutdown
       end
