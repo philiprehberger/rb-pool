@@ -379,18 +379,57 @@ RSpec.describe Philiprehberger::Pool do
         r1 = pool.checkout
         r2 = pool.checkout
 
-        expect(pool.stats).to eq({ size: 2, available: 0, in_use: 2 })
+        expect(pool.stats).to eq({ size: 2, available: 0, in_use: 2, max: 3 })
 
         pool.checkin(r1)
-        expect(pool.stats).to eq({ size: 2, available: 1, in_use: 1 })
+        expect(pool.stats).to eq({ size: 2, available: 1, in_use: 1, max: 3 })
 
         pool.checkin(r2)
-        expect(pool.stats).to eq({ size: 2, available: 2, in_use: 0 })
+        expect(pool.stats).to eq({ size: 2, available: 2, in_use: 0, max: 3 })
       end
 
       it 'reports size 0 for a fresh pool' do
         pool = described_class.new(size: 5, &factory)
-        expect(pool.stats).to eq({ size: 0, available: 0, in_use: 0 })
+        expect(pool.stats).to eq({ size: 0, available: 0, in_use: 0, max: 5 })
+      end
+    end
+
+    describe '#size' do
+      it 'returns the configured maximum capacity' do
+        pool = described_class.new(size: 4, &factory)
+        expect(pool.size).to eq(4)
+      end
+    end
+
+    describe '#prune_idle' do
+      it 'returns 0 when no idle_timeout is configured' do
+        pool = described_class.new(size: 3, &factory)
+        pool.with { |_| }
+        expect(pool.prune_idle).to eq(0)
+      end
+
+      it 'evicts available entries past the idle timeout' do
+        pool = described_class.new(size: 3, idle_timeout: 0.05, &factory)
+        pool.with { |_| }
+        pool.with { |_| }
+        expect(pool.stats[:available]).to eq(1)
+        sleep 0.1
+        expect(pool.prune_idle).to eq(1)
+        expect(pool.stats[:available]).to eq(0)
+        expect(pool.stats[:size]).to eq(0)
+      end
+
+      it 'leaves fresh entries alone' do
+        pool = described_class.new(size: 2, idle_timeout: 5, &factory)
+        pool.with { |_| }
+        expect(pool.prune_idle).to eq(0)
+        expect(pool.stats[:available]).to eq(1)
+      end
+
+      it 'raises ShutdownError on a shut-down pool' do
+        pool = described_class.new(size: 1, idle_timeout: 1, &factory)
+        pool.shutdown
+        expect { pool.prune_idle }.to raise_error(Philiprehberger::Pool::ShutdownError)
       end
     end
   end
