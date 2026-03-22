@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'spec_helper'
 RSpec.describe Philiprehberger::Pool do
   let(:counter) { [0] }
   let(:pool) { described_class.new(size: 3, timeout: 2) { counter[0] += 1; counter[0].to_s } }

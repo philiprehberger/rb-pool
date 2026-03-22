@@ -8,6 +8,8 @@ Metrics:
   Enabled: false
 Naming:
   Enabled: false
+Lint:
+  Enabled: false
 Lint/DuplicateBranch:
   Enabled: false
 Lint/HashCompareByIdentity:
