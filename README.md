@@ -1,6 +1,7 @@
 # philiprehberger-pool
 
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-pool.svg)](https://badge.fury.io/rb/philiprehberger-pool)
+$badge_line
 [![CI](https://github.com/philiprehberger/rb-pool/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-pool/actions/workflows/ci.yml)
 
 Generic thread-safe object pool with idle timeout and health checks.

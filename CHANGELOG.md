@@ -7,6 +7,12 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-03-22
+
+### Changed
+
+- Expand test coverage to 30+ examples covering sequential checkouts, resource reuse, factory call counts, exception safety, double checkin, shutdown behavior, and stats accuracy
+
 ## [0.1.2] - 2026-03-22
 
 ### Fixed
