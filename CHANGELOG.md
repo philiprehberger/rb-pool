@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+n## [0.1.4] - 2026-03-22
+
+### Changed
+- Fix README badges to match template (Tests, Gem Version, License)
 
 ## [0.1.3] - 2026-03-22
 
