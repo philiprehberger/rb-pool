@@ -27,7 +27,7 @@ gem install philiprehberger-pool
 ## Usage
 
 ```ruby
-require 'philiprehberger/pool'
+require "philiprehberger/pool"
 
 # Create a pool of database connections
 pool = Philiprehberger::Pool.new(size: 5, timeout: 10) do
