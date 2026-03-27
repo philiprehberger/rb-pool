@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/rb-pool/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-pool/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-pool.svg)](https://rubygems.org/gems/philiprehberger-pool)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-pool)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Generic thread-safe object pool with idle timeout and health checks
 
@@ -123,4 +124,4 @@ bundle exec rubocop
 
 ## License
 
-MIT
+[MIT](LICENSE)
