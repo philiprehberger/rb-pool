@@ -9,10 +9,37 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   EnforcedStyle: always
 
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
 Style/FormatStringToken:
   Enabled: false
 
+Style/RedundantFetchBlock:
+  Enabled: false
+
+Style/ComparableClamp:
+  Enabled: false
+
+Style/HashLikeCase:
+  Enabled: false
+
+Style/OneClassPerFile:
+  Enabled: false
+
+
+Style/MultilineBlockChain:
+  Exclude:
+    - "spec/**/*"
+
+Style/IdenticalConditionalBranches:
+  Enabled: false
+
+Style/FileOpen:
+  Enabled: false
+
 Metrics/BlockLength:
+  Max: 60
   Exclude:
     - "spec/**/*"
     - "*.gemspec"
@@ -42,10 +69,14 @@ Metrics/CollectionLiteralLength:
   Enabled: false
 
 Layout/LineLength:
-  Max: 120
+  Max: 140
 
 Layout/EndOfLine:
   Enabled: false
+
+Layout/BlockAlignment:
+  Exclude:
+    - "spec/**/*"
 
 Lint/HashCompareByIdentity:
   Enabled: false
@@ -59,6 +90,26 @@ Lint/EmptyWhen:
 Lint/UnusedMethodArgument:
   Enabled: false
 
+Lint/EmptyBlock:
+  Exclude:
+    - "spec/**/*"
+
+Lint/UnreachableLoop:
+  Exclude:
+    - "spec/**/*"
+
+Lint/NonLocalExitFromIterator:
+  Enabled: false
+
+Lint/UselessConstantScoping:
+  Enabled: false
+
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+
+Lint/DuplicateHashKey:
+  Enabled: false
+
 Naming/PredicatePrefix:
   Enabled: false
 
@@ -67,3 +118,10 @@ Naming/PredicateMethod:
 
 Naming/MethodParameterName:
   Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
