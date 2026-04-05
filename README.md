@@ -74,6 +74,18 @@ pool.stats
 # => { size: 2, available: 1, in_use: 1 }
 ```
 
+### Draining Idle Resources
+
+```ruby
+require "philiprehberger/pool"
+
+pool = Philiprehberger::Pool.new(size: 5) { TCPSocket.new("db.local", 5432) }
+
+# Rotate connections after a config change
+drained = pool.drain  # => closes idle connections, returns count
+# New checkouts will create fresh connections
+```
+
 ### Shutdown
 
 ```ruby
@@ -102,6 +114,7 @@ Creates a new resource pool.
 | `#with { \|resource\| ... }` | Checkout, yield, and auto-checkin |
 | `#checkout(timeout: nil)` | Manually check out a resource |
 | `#checkin(resource)` | Return a resource to the pool |
+| `#drain` | Remove and close idle resources, return count drained |
 | `#stats` | Hash with `:size`, `:available`, `:in_use` |
 | `#shutdown` | Close all resources, reject new checkouts |
 | `#shutdown?` | Whether the pool has been shut down |

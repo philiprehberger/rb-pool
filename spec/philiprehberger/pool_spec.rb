@@ -325,6 +325,54 @@ RSpec.describe Philiprehberger::Pool do
       end
     end
 
+    describe '#drain' do
+      it 'removes idle resources' do
+        pool = described_class.new(size: 3) { Object.new }
+        r1 = pool.checkout
+        pool.checkin(r1)
+        drained = pool.drain
+        expect(drained).to eq(1)
+        expect(pool.stats[:available]).to eq(0)
+      end
+
+      it 'does not affect in-use resources' do
+        pool = described_class.new(size: 3) { Object.new }
+        r1 = pool.checkout
+        pool.drain
+        expect(pool.stats[:in_use]).to eq(1)
+        pool.checkin(r1)
+      end
+
+      it 'allows new checkouts after drain' do
+        pool = described_class.new(size: 3) { Object.new }
+        r1 = pool.checkout
+        pool.checkin(r1)
+        pool.drain
+        r2 = pool.checkout
+        expect(r2).not_to be_nil
+        pool.checkin(r2)
+      end
+
+      it 'calls close on drained resources' do
+        resource = double('resource', close: nil)
+        pool = described_class.new(size: 2) { resource }
+        pool.checkout.tap { |r| pool.checkin(r) }
+        pool.drain
+        expect(resource).to have_received(:close).at_least(:once)
+      end
+
+      it 'raises when pool is shut down' do
+        pool = described_class.new(size: 1) { Object.new }
+        pool.shutdown
+        expect { pool.drain }.to raise_error(Philiprehberger::Pool::ShutdownError)
+      end
+
+      it 'returns zero when no idle resources' do
+        pool = described_class.new(size: 2) { Object.new }
+        expect(pool.drain).to eq(0)
+      end
+    end
+
     describe 'stats accuracy' do
       it 'reflects correct state after mixed operations' do
         pool = described_class.new(size: 3, &factory)
