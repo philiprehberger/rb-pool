@@ -71,7 +71,16 @@ pool = Philiprehberger::Pool.new(
 
 ```ruby
 pool.stats
-# => { size: 2, available: 1, in_use: 1 }
+# => { size: 2, available: 1, in_use: 1, max: 5 }
+```
+
+### Pruning Idle Resources
+
+```ruby
+pool = Philiprehberger::Pool.new(size: 5, idle_timeout: 60) { TCPSocket.new("db.local", 5432) }
+
+# Periodically reclaim idle handles without waiting for the next checkout
+pruned = pool.prune_idle  # => count of resources evicted
 ```
 
 ### Draining Idle Resources
@@ -115,7 +124,9 @@ Creates a new resource pool.
 | `#checkout(timeout: nil)` | Manually check out a resource |
 | `#checkin(resource)` | Return a resource to the pool |
 | `#drain` | Remove and close idle resources, return count drained |
-| `#stats` | Hash with `:size`, `:available`, `:in_use` |
+| `#stats` | Hash with `:size`, `:available`, `:in_use`, `:max` |
+| `#size` | Configured maximum capacity |
+| `#prune_idle` | Evict available resources past `idle_timeout`, return count |
 | `#shutdown` | Close all resources, reject new checkouts |
 | `#shutdown?` | Whether the pool has been shut down |
 

@@ -101,7 +101,24 @@ module Philiprehberger
 
       def stats
         @mutex.synchronize do
-          { size: @created, available: @available.size, in_use: @in_use.size }
+          { size: @created, available: @available.size, in_use: @in_use.size, max: @size }
+        end
+      end
+
+      def size
+        @mutex.synchronize { @size }
+      end
+
+      def prune_idle
+        @mutex.synchronize do
+          raise ShutdownError, 'pool is shut down' if @shutdown
+          return 0 unless @idle_timeout
+
+          now = Time.now
+          expired, kept = @available.partition { |entry| (now - entry.last_used) > @idle_timeout }
+          @available = kept
+          expired.each { |entry| destroy_resource(entry.resource) }
+          expired.size
         end
       end
 
