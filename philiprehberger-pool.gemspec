@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
                      'idle timeout eviction, health checks, and lazy resource creation.'
   spec.homepage = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-pool'
   spec.license = 'MIT'
-  spec.required_ruby_version = '>= 3.1'
+  spec.required_ruby_version = '>= 3.1.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/philiprehberger/rb-pool'

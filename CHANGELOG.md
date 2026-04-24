@@ -7,6 +7,14 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-24
+
+### Added
+- `ResourcePool#utilization` — fraction of max capacity currently in use (Float in `0.0..1.0`); useful for metrics without unpacking `#stats`
+
+### Changed
+- `required_ruby_version` normalized from `'>= 3.1'` to `'>= 3.1.0'` to match the Ruby package guide
+
 ## [0.3.1] - 2026-04-09
 
 ### Changed

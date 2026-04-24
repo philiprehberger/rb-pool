@@ -102,6 +102,34 @@ RSpec.describe Philiprehberger::Pool do
       end
     end
 
+    describe '#utilization' do
+      it 'returns 0.0 for an idle pool' do
+        pool = described_class.new(size: 4, &factory)
+        expect(pool.utilization).to eq(0.0)
+      end
+
+      it 'returns the fraction of max currently in use' do
+        pool = described_class.new(size: 4, &factory)
+        pool.checkout
+        pool.checkout
+        expect(pool.utilization).to eq(0.5)
+      end
+
+      it 'returns 1.0 when all slots are checked out' do
+        pool = described_class.new(size: 2, &factory)
+        pool.checkout
+        pool.checkout
+        expect(pool.utilization).to eq(1.0)
+      end
+
+      it 'returns 0.0 after shutdown (all resources released)' do
+        pool = described_class.new(size: 2, &factory)
+        pool.checkout
+        pool.shutdown
+        expect(pool.utilization).to eq(0.0)
+      end
+    end
+
     describe '#shutdown' do
       it 'rejects new checkouts after shutdown' do
         pool = described_class.new(size: 2, &factory)

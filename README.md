@@ -72,6 +72,9 @@ pool = Philiprehberger::Pool.new(
 ```ruby
 pool.stats
 # => { size: 2, available: 1, in_use: 1, max: 5 }
+
+# Fraction of max currently in use (0.0..1.0)
+pool.utilization  # => 0.2
 ```
 
 ### Pruning Idle Resources
@@ -125,6 +128,7 @@ Creates a new resource pool.
 | `#checkin(resource)` | Return a resource to the pool |
 | `#drain` | Remove and close idle resources, return count drained |
 | `#stats` | Hash with `:size`, `:available`, `:in_use`, `:max` |
+| `#utilization` | Fraction of max capacity currently in use (`0.0..1.0`) |
 | `#size` | Configured maximum capacity |
 | `#prune_idle` | Evict available resources past `idle_timeout`, return count |
 | `#shutdown` | Close all resources, reject new checkouts |

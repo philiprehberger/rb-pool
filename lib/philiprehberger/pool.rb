@@ -109,6 +109,21 @@ module Philiprehberger
         @mutex.synchronize { @size }
       end
 
+      # Fraction of the pool currently in use.
+      #
+      # Returns `in_use / max` as a `Float` between `0.0` and `1.0`. Useful for
+      # dashboards/metrics without needing to unpack `#stats`. Returns `0.0`
+      # when the pool has been shut down or has zero capacity.
+      #
+      # @return [Float] fraction of capacity in use (0.0..1.0)
+      def utilization
+        @mutex.synchronize do
+          return 0.0 if @size <= 0
+
+          @in_use.size.to_f / @size
+        end
+      end
+
       def prune_idle
         @mutex.synchronize do
           raise ShutdownError, 'pool is shut down' if @shutdown
