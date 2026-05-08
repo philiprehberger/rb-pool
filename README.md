@@ -98,6 +98,18 @@ drained = pool.drain  # => closes idle connections, returns count
 # New checkouts will create fresh connections
 ```
 
+### Clearing Idle Resources
+
+```ruby
+require "philiprehberger/pool"
+
+pool = Philiprehberger::Pool.new(size: 10) { build_db_connection(creds.current) }
+
+# Credentials rotated — discard every cached connection without tearing down the pool
+cleared = pool.clear  # => count of idle resources destroyed; checked-out ones are untouched
+# Subsequent checkouts will lazily build fresh connections using the new credentials
+```
+
 ### Shutdown
 
 ```ruby
@@ -131,6 +143,7 @@ Creates a new resource pool.
 | `#utilization` | Fraction of max capacity currently in use (`0.0..1.0`) |
 | `#size` | Configured maximum capacity |
 | `#prune_idle` | Evict available resources past `idle_timeout`, return count |
+| `#clear` | Destroy every idle resource, leave checked-out ones; return count |
 | `#shutdown` | Close all resources, reject new checkouts |
 | `#shutdown?` | Whether the pool has been shut down |
 

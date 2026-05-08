@@ -169,6 +169,25 @@ module Philiprehberger
         @shutdown
       end
 
+      # Destroy every idle (available) resource without changing the pool's
+      # configured capacity or shutting it down. Resources currently checked
+      # out are left untouched and will be destroyed normally on `checkin`
+      # via the next health-check cycle (or kept if healthy). Useful for
+      # credential-rotation flows where every cached connection should be
+      # discarded but the pool itself must keep accepting new checkouts.
+      #
+      # @return [Integer] number of idle resources cleared
+      def clear
+        @mutex.synchronize do
+          raise ShutdownError, 'pool is shut down' if @shutdown
+
+          cleared = @available
+          @available = []
+          cleared.each { |entry| destroy_resource(entry.resource) }
+          cleared.size
+        end
+      end
+
       private
 
       def create_resource

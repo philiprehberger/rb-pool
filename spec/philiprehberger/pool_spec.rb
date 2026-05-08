@@ -460,5 +460,50 @@ RSpec.describe Philiprehberger::Pool do
         expect { pool.prune_idle }.to raise_error(Philiprehberger::Pool::ShutdownError)
       end
     end
+
+    describe '#clear' do
+      let(:factory) do
+        @counter = 0
+        proc do
+          @counter += 1
+          [@counter]
+        end
+      end
+
+      it 'destroys every idle resource and resets the available pool' do
+        pool = described_class.new(size: 3, &factory)
+        pool.with { |_| }
+        pool.with { |_| }
+
+        expect(pool.stats[:available]).to eq(1)
+        cleared = pool.clear
+        expect(cleared).to be >= 1
+        expect(pool.stats[:available]).to eq(0)
+      end
+
+      it 'leaves checked-out resources alone' do
+        pool = described_class.new(size: 2, &factory)
+        held = pool.checkout
+
+        cleared = pool.clear
+        expect(cleared).to eq(0)
+        expect(pool.stats[:in_use]).to eq(1)
+
+        pool.checkin(held)
+      end
+
+      it 'allows new checkouts after clear' do
+        pool = described_class.new(size: 2, &factory)
+        pool.with { |_| }
+        pool.clear
+        expect { pool.with { |r| expect(r).to be_a(Array) } }.not_to raise_error
+      end
+
+      it 'raises ShutdownError on a shut-down pool' do
+        pool = described_class.new(size: 1, &factory)
+        pool.shutdown
+        expect { pool.clear }.to raise_error(Philiprehberger::Pool::ShutdownError)
+      end
+    end
   end
 end

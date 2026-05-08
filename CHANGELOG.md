@@ -7,6 +7,15 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-08
+
+### Added
+- `ResourcePool#clear` — destroys every idle resource without shutting down the pool. Checked-out resources are left untouched. Useful for credential-rotation scenarios where every cached connection should be discarded.
+
+### Fixed
+- Gemspec `authors` and `email` normalized to `['Philip Rehberger']` and `['me@philiprehberger.com']` (previously a placeholder)
+- Gemspec `files` glob tightened from `lib/**/*` to `lib/**/*.rb` so only Ruby sources ship in the gem
+
 ## [0.4.0] - 2026-04-24
 
 ### Added
