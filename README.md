@@ -4,6 +4,8 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-pool.svg)](https://rubygems.org/gems/philiprehberger-pool)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-pool)](https://github.com/philiprehberger/rb-pool/commits/main)
 
+![philiprehberger-pool](https://raw.githubusercontent.com/philiprehberger/rb-pool/main/package-card.webp)
+
 Generic thread-safe object pool with idle timeout and health checks
 
 ## Requirements
@@ -71,10 +73,13 @@ pool = Philiprehberger::Pool.new(
 
 ```ruby
 pool.stats
-# => { size: 2, available: 1, in_use: 1, max: 5 }
+# => { size: 2, available: 1, in_use: 1, max: 5, waiting: 0 }
 
 # Fraction of max currently in use (0.0..1.0)
 pool.utilization  # => 0.2
+
+# Threads currently blocked on checkout (back-pressure indicator)
+pool.waiting      # => 0
 ```
 
 ### Pruning Idle Resources
@@ -139,7 +144,8 @@ Creates a new resource pool.
 | `#checkout(timeout: nil)` | Manually check out a resource |
 | `#checkin(resource)` | Return a resource to the pool |
 | `#drain` | Remove and close idle resources, return count drained |
-| `#stats` | Hash with `:size`, `:available`, `:in_use`, `:max` |
+| `#stats` | Hash with `:size`, `:available`, `:in_use`, `:max`, `:waiting` (threads blocked on checkout) |
+| `#waiting` | Number of threads currently blocked in `checkout`/`with` waiting for a resource |
 | `#utilization` | Fraction of max capacity currently in use (`0.0..1.0`) |
 | `#size` | Configured maximum capacity |
 | `#prune_idle` | Evict available resources past `idle_timeout`, return count |

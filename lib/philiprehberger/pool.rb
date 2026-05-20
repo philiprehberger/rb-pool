@@ -28,6 +28,7 @@ module Philiprehberger
         @available = []
         @created = 0
         @in_use = Set.new
+        @waiting = 0
         @shutdown = false
       end
 
@@ -81,7 +82,12 @@ module Philiprehberger
             remaining = deadline - Time.now
             raise TimeoutError, "could not obtain resource within #{effective_timeout}s" if remaining <= 0
 
-            @condition.wait(@mutex, remaining)
+            @waiting += 1
+            begin
+              @condition.wait(@mutex, remaining)
+            ensure
+              @waiting -= 1
+            end
           end
         end
       end
@@ -99,10 +105,31 @@ module Philiprehberger
         end
       end
 
+      # Snapshot of the pool's internal counters.
+      #
+      # Includes the number of threads currently blocked in `checkout`/`with`
+      # waiting for a resource (`:waiting`). A non-zero `:waiting` while
+      # `in_use == max` indicates back-pressure and is a good signal that the
+      # pool may need to be sized up.
+      #
+      # @return [Hash] keys: :size, :available, :in_use, :max, :waiting
       def stats
         @mutex.synchronize do
-          { size: @created, available: @available.size, in_use: @in_use.size, max: @size }
+          {
+            size: @created,
+            available: @available.size,
+            in_use: @in_use.size,
+            max: @size,
+            waiting: @waiting
+          }
         end
+      end
+
+      # Number of threads currently waiting for a resource to become available.
+      #
+      # @return [Integer]
+      def waiting
+        @mutex.synchronize { @waiting }
       end
 
       def size

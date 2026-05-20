@@ -100,6 +100,40 @@ RSpec.describe Philiprehberger::Pool do
         expect(pool.stats[:available]).to eq(1)
         expect(pool.stats[:in_use]).to eq(1)
       end
+
+      it 'reports zero waiting on an idle pool' do
+        pool = described_class.new(size: 2, &factory)
+        expect(pool.stats[:waiting]).to eq(0)
+        expect(pool.waiting).to eq(0)
+      end
+
+      it 'includes :max in the snapshot' do
+        pool = described_class.new(size: 4, &factory)
+        expect(pool.stats[:max]).to eq(4)
+      end
+
+      it 'reflects threads blocked on checkout via :waiting' do
+        pool = described_class.new(size: 1, timeout: 1.0, &factory)
+        pool.checkout # exhaust capacity
+
+        threads = Array.new(3) do
+          Thread.new { pool.checkout(timeout: 0.5) rescue nil } # rubocop:disable Style/RescueModifier
+        end
+
+        # Give the blockers time to enter the wait state.
+        deadline = Time.now + 0.5
+        waiting = 0
+        until Time.now > deadline
+          waiting = pool.waiting
+          break if waiting == 3
+
+          sleep 0.01
+        end
+
+        expect(waiting).to eq(3)
+        threads.each(&:join)
+        expect(pool.waiting).to eq(0)
+      end
     end
 
     describe '#utilization' do
@@ -407,18 +441,18 @@ RSpec.describe Philiprehberger::Pool do
         r1 = pool.checkout
         r2 = pool.checkout
 
-        expect(pool.stats).to eq({ size: 2, available: 0, in_use: 2, max: 3 })
+        expect(pool.stats).to eq({ size: 2, available: 0, in_use: 2, max: 3, waiting: 0 })
 
         pool.checkin(r1)
-        expect(pool.stats).to eq({ size: 2, available: 1, in_use: 1, max: 3 })
+        expect(pool.stats).to eq({ size: 2, available: 1, in_use: 1, max: 3, waiting: 0 })
 
         pool.checkin(r2)
-        expect(pool.stats).to eq({ size: 2, available: 2, in_use: 0, max: 3 })
+        expect(pool.stats).to eq({ size: 2, available: 2, in_use: 0, max: 3, waiting: 0 })
       end
 
       it 'reports size 0 for a fresh pool' do
         pool = described_class.new(size: 5, &factory)
-        expect(pool.stats).to eq({ size: 0, available: 0, in_use: 0, max: 5 })
+        expect(pool.stats).to eq({ size: 0, available: 0, in_use: 0, max: 5, waiting: 0 })
       end
     end
 

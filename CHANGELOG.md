@@ -7,6 +7,12 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-05-20
+
+### Added
+- `ResourcePool#waiting` and a `:waiting` key in `#stats` — number of threads currently blocked on `checkout`/`with`, surfacing back-pressure for metrics dashboards (non-zero waiting while `in_use == max` indicates the pool may need resizing)
+- Card image reference in the README for registry-side rendering
+
 ## [0.5.0] - 2026-05-08
 
 ### Added
